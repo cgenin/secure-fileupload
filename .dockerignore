@@ -1,0 +1,8 @@
+.gradle
+build
+file-uploads
+gradle
+redis
+redis.conf
+wc/node_modules
+wc/.storybook

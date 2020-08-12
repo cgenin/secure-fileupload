@@ -1,0 +1,6 @@
+.gradle
+.idea
+build
+redis/*.rdb
+gradle
+src/main/resources/webroot/wc
