@@ -1,10 +1,6 @@
 <template>
   <div class="uploader"
-       :class="{'full-width': fullWidth, disabled:disabled}">
-    <div v-if="files.length>0" class="buttons">
-      <button class="outline danger-white" @click="deleteAllFiles">Tout effacer</button>
-      <button class="outline green-white">Envoyer</button>
-    </div>
+       :class="{disabled}">
     <label class="file-drag"
            :class="{hover:dragover,'modal-body file-upload':!dragover }"
            @dragover="fileDragHover"
@@ -43,17 +39,13 @@
   </div>
 </template>
 <script>
-import {isXhr2, uuidv4} from './utils';
+import { isXhr2, uuidv4 } from './utils';
 import FileuploadPreview from './FileuploadPreview';
 
 export default {
   name: 'file-upload',
   props: {
     multiple: {
-      type: Boolean,
-      default: false,
-    },
-    fullWidth: {
       type: Boolean,
       default: false,
     },
@@ -65,13 +57,12 @@ export default {
       type: String,
       default: 'Sélectionner un fichier'
     },
-
     disabled: {
       type: Boolean,
       default: false
     }
   },
-  components: {FileuploadPreview},
+  components: { FileuploadPreview },
   data() {
     return {
       inputName: 'file-upload',
@@ -100,8 +91,8 @@ export default {
       const filesList = e.target.files || e.dataTransfer.files;
       this.fileDragHover(e);
       this.files = [...filesList];
-      this.$emit('onSelectFile', {files: this.files});
-
+      this.$emit('onSelectFile', { files: this.files });
+      this.onChange();
     },
     fileDragHover(e) {
       if (e) {
@@ -119,16 +110,22 @@ export default {
       }
       if (this.files.length === 1) {
         this.files = [];
+        this.onChange();
         return;
       }
       const tmp = this.files.filter(f => f !== file2Delete);
       this.files = [...tmp];
+      this.onChange();
     },
     deleteAllFiles() {
       if (this.disabled) {
         return;
       }
       this.files = [];
+      this.onChange();
+    },
+    onChange() {
+      this.$emit('change', this.files);
     }
 
   }
@@ -138,13 +135,11 @@ export default {
 
 .uploader {
   --uploader-danger-color: #db4437;
-  --uploader-success-color: #7dc21e;
   --uploader-color: #454cad;
   --uploader-progress-color: #393f90;
   --uploader-background-color: #fff;
   --uploader-border-color: #eeeeee;
   --uploader-text-color: #5f6982;
-
 }
 
 .uploader {
@@ -152,21 +147,13 @@ export default {
   clear: both;
   margin: 0 auto;
   width: 100%;
-  max-width: 600px;
+  /*max-width: 600px;*/
   font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol";
   font-size: 15px;
   line-height: 1.46667;
   letter-spacing: 0.1px;
   color: rgb(72, 72, 72);
   background-color: var(--uploader-background-color);
-}
-
-.uploader.full-width {
-  max-width: 100%;
-}
-
-.uploader.disabled {
-  opacity: 0.5;
 }
 
 .uploader label {
@@ -184,10 +171,6 @@ export default {
   -moz-user-select: none;
   -ms-user-select: none;
   user-select: none;
-}
-
-.uploader.disabled label {
-  cursor: not-allowed;
 }
 
 .uploader label:hover {
@@ -309,78 +292,6 @@ export default {
   background: var(--uploader-color);
   border-color: var(--uploader-color);
   cursor: pointer;
-}
-
-
-.uploader .buttons {
-  display: flex;
-  justify-content: space-around;
-}
-
-button {
-  cursor: pointer;
-  outline: none;
-}
-
-button.outline {
-  position: relative;
-  z-index: 3;
-  background: transparent;
-  color: var(--uploader-color);
-  font-size: 14px;
-  border-color: var(--uploader-color);
-  border-style: solid;
-  border-width: 2px;
-  border-radius: 22px;
-  padding: 10px 40px;
-  text-transform: uppercase;
-  transition: all 0.2s linear;
-}
-
-button.outline a {
-  text-decoration: none;
-}
-
-button.outline:hover {
-  color: var(--uploader-background-color);
-  background: var(--uploader-color);
-  border-color: var(--uploader-background-color);
-  transition: all 0.2s linear;
-}
-
-button.outline:active {
-  border-radius: 22px;
-}
-
-button.green-white {
-  font-weight: 700;
-  color: var(--uploader-success-color);
-  border-color: var(--uploader-success-color);
-  background: transparent;
-}
-
-button.green-white:hover {
-  color: var(--uploader-background-color);
-  background: var(--uploader-success-color);
-  border-color: var(--uploader-success-color);
-}
-
-button.danger-white {
-  font-weight: 700;
-  color: var(--uploader-danger-color);
-  border-color: var(--uploader-danger-color);
-  background: transparent;
-}
-
-button.danger-white:hover {
-  color: var(--uploader-background-color);
-  background: var(--uploader-danger-color);
-  border-color: var(--uploader-danger-color);
-}
-
-.uploader.disabled .btn,
-.uploader.disabled button {
-  cursor: not-allowed;
 }
 
 </style>

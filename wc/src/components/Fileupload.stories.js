@@ -1,10 +1,11 @@
 import FileUpload from './Fileupload';
 
 export default {
-    title: 'FileUpload/Component',
+    title: 'Components/FileUpload',
     component: FileUpload,
     argTypes: {
         selectFile: { action: 'fileSelected' },
+        change: { action: 'change' },
     },
 };
 
@@ -14,18 +15,8 @@ export const Default = (args, { argTypes }) => ({
     label: 'Default',
     components: { FileUpload },
     template: `
-      <file-upload 
-          v-bind="$props"></file-upload>`
-});
-
-
-export const Events = (args, { argTypes }) => ({
-    props: Object.keys(argTypes),
-    label: 'Events',
-    components: { FileUpload },
-    template: `
       <file-upload
+          @change="change"
           @onSelectFile="selectFile"
-      ></file-upload>`,
-
+          v-bind="$props"></file-upload>`
 });
