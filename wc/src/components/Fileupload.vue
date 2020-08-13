@@ -1,6 +1,6 @@
 <template>
   <div class="uploader"
-       :class="{'full-width': fullWidth}">
+       :class="{'full-width': fullWidth, disabled:disabled}">
     <div v-if="files.length>0" class="buttons">
       <button class="outline danger-white" @click="deleteAllFiles">Tout effacer</button>
       <button class="outline green-white">Envoyer</button>
@@ -17,6 +17,7 @@
              accept="image/*"
              @change="fileSelectHandler"
              :multiple="multiple"
+             :disabled="disabled"
       />
 
       <div v-if="displayUpload" class="start">
@@ -30,6 +31,7 @@
       <div class="previews">
         <fileupload-preview :key="'key-'+index+'-'+f.name"
                             :file="f"
+                            :disabled="disabled"
                             v-for="(f, index) in files"
                             @onDelete="deleteOneFilehandler"
         />
@@ -41,7 +43,7 @@
   </div>
 </template>
 <script>
-import { isXhr2, uuidv4 } from './utils';
+import {isXhr2, uuidv4} from './utils';
 import FileuploadPreview from './FileuploadPreview';
 
 export default {
@@ -62,9 +64,14 @@ export default {
     buttonLabel: {
       type: String,
       default: 'Sélectionner un fichier'
+    },
+
+    disabled: {
+      type: Boolean,
+      default: false
     }
   },
-  components: { FileuploadPreview },
+  components: {FileuploadPreview},
   data() {
     return {
       inputName: 'file-upload',
@@ -81,15 +88,19 @@ export default {
   },
   computed: {
     displayUpload() {
-      return this.multiple || this.files.length === 0;
+      return this.files.length === 0;
     }
   },
   methods: {
     fileSelectHandler(e) {
+      if (this.disabled) {
+        return;
+      }
+
       const filesList = e.target.files || e.dataTransfer.files;
       this.fileDragHover(e);
       this.files = [...filesList];
-      this.$emit('onSelectFile', { files: this.files });
+      this.$emit('onSelectFile', {files: this.files});
 
     },
     fileDragHover(e) {
@@ -103,6 +114,9 @@ export default {
       }
     },
     deleteOneFilehandler(file2Delete) {
+      if (this.disabled) {
+        return;
+      }
       if (this.files.length === 1) {
         this.files = [];
         return;
@@ -111,6 +125,9 @@ export default {
       this.files = [...tmp];
     },
     deleteAllFiles() {
+      if (this.disabled) {
+        return;
+      }
       this.files = [];
     }
 
@@ -148,6 +165,10 @@ export default {
   max-width: 100%;
 }
 
+.uploader.disabled {
+  opacity: 0.5;
+}
+
 .uploader label {
   float: left;
   clear: both;
@@ -163,6 +184,10 @@ export default {
   -moz-user-select: none;
   -ms-user-select: none;
   user-select: none;
+}
+
+.uploader.disabled label {
+  cursor: not-allowed;
 }
 
 .uploader label:hover {
@@ -286,6 +311,7 @@ export default {
   cursor: pointer;
 }
 
+
 .uploader .buttons {
   display: flex;
   justify-content: space-around;
@@ -352,5 +378,9 @@ button.danger-white:hover {
   border-color: var(--uploader-danger-color);
 }
 
+.uploader.disabled .btn,
+.uploader.disabled button {
+  cursor: not-allowed;
+}
 
 </style>

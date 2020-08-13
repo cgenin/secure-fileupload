@@ -23,7 +23,7 @@ export default {
   },
   computed: {
     name() {
-      const { file } = this;
+      const {file} = this;
       return file.name || 'No Name';
     },
     isImage() {
@@ -45,8 +45,10 @@ export default {
 }
 </script>
 <style scoped>
+@import url("../assets/skeleton.css");
 
 .response {
+  --upload-response-delete-width: 45px;
   float: left;
   clear: both;
   width: 100%;
@@ -55,6 +57,7 @@ export default {
   justify-content: center;
   align-items: center;
 }
+
 
 .response .file-image {
   display: inline;
@@ -69,10 +72,6 @@ export default {
 }
 
 
-.response.hidden {
-  display: none;
-}
-
 .response .messages {
   margin-bottom: .5rem;
 }
@@ -83,14 +82,14 @@ export default {
 }
 
 .floating-button {
-  width: 55px;
-  height: 55px;
+  width: var(--upload-response-delete-width);
+  height: var(--upload-response-delete-width);
   border-radius: 50%;
   background: var(--uploader-danger-color);
-  margin-top: -55px;
-  margin-left: 95px;
+  margin-top: -45px;
+  margin-left: 105px;
   cursor: pointer;
-  box-shadow: 0px 2px 5px #666;
+  box-shadow: 0 2px 5px #666;
 }
 
 .plus {
@@ -103,9 +102,9 @@ export default {
   text-align: center;
   padding: 0;
   margin: 0;
-  line-height: 55px;
-  width: 55px;
-  height: 55px;
+  line-height: var(--upload-response-delete-width);
+  width: var(--upload-response-delete-width);
+  height: var(--upload-response-delete-width);
   font-size: 38px;
   font-weight: 300;
   background: url("../assets/plus-icon.svg") center no-repeat;
