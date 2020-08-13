@@ -2,6 +2,8 @@
   <div class="response">
     <div class="messages"><strong>{{ name }}</strong></div>
     <img v-if="isImage" alt="Preview" :src="imgData" class="file-image">
+    <img v-if="isPdf" alt="Preview" src="../assets/pdf-icon.svg" class="file-image-pdf">
+    <img v-if="!isPdf && !isImage" alt="Preview" src="../assets/file-icon.svg" class="file-image-pdf">
     <div class="buttons">
       <div class="floating-button"
            @click.prevent="onDelete"
@@ -19,15 +21,26 @@ export default {
     file: {
       type: File,
       required: true
-    }
+    },
+    extensions: {
+      type: Array,
+      required: true
+    },
   },
   computed: {
     name() {
-      const {file} = this;
+      const { file } = this;
       return file.name || 'No Name';
     },
+    extension() {
+      return this.extensions.find(e => e.match(this.name));
+    },
     isImage() {
-      return (/\.(?=gif|jpg|png|jpeg)/gi).test(this.name);
+      return this.extension && this.extension.isImage();
+    },
+    isPdf() {
+
+      return this.extension && this.extension.isPDF();
     },
     imgData() {
       if (this.isImage && URL.createObjectURL) {
@@ -59,12 +72,18 @@ export default {
 }
 
 
-.response .file-image {
+.response .file-image,
+.response .file-image-pdf {
   display: inline;
   margin: 0 auto .5rem auto;
   width: auto;
   height: auto;
   max-width: 180px;
+}
+
+.response .file-image-pdf {
+  height: 180px;
+  width: 180px;
 }
 
 .response .file-image.hidden {

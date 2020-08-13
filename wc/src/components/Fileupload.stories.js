@@ -16,6 +16,7 @@ export const Default = (args, { argTypes }) => ({
     components: { FileUpload },
     template: `
       <file-upload
+          :accept="['JPG', 'PDF', 'PNG']"
           @change="change"
           @onSelectFile="selectFile"
           v-bind="$props"></file-upload>`

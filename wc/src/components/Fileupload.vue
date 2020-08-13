@@ -10,7 +10,7 @@
       <input ref="input"
              type="file"
              name="fileUpload"
-             accept="image/*"
+             :accept="acceptStr"
              @change="fileSelectHandler"
              :multiple="multiple"
              :disabled="disabled"
@@ -27,6 +27,7 @@
       <div class="previews">
         <fileupload-preview :key="'key-'+index+'-'+f.name"
                             :file="f"
+                            :extensions="extensions"
                             :disabled="disabled"
                             v-for="(f, index) in files"
                             @onDelete="deleteOneFilehandler"
@@ -39,7 +40,7 @@
   </div>
 </template>
 <script>
-import { isXhr2, uuidv4 } from './utils';
+import { accept, convert2Extensions, isXhr2, uuidv4 } from './utils';
 import FileuploadPreview from './FileuploadPreview';
 
 export default {
@@ -60,6 +61,10 @@ export default {
     disabled: {
       type: Boolean,
       default: false
+    },
+    accept: {
+      type: Array,
+      required: true
     }
   },
   components: { FileuploadPreview },
@@ -80,6 +85,13 @@ export default {
   computed: {
     displayUpload() {
       return this.files.length === 0;
+    },
+    extensions() {
+      console.log(convert2Extensions(this.accept))
+      return convert2Extensions(this.accept);
+    },
+    acceptStr() {
+      return accept(this.extensions);
     }
   },
   methods: {
