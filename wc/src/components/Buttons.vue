@@ -1,9 +1,13 @@
 <template>
 
   <div class="buttons"
-    :class="{disabled}">
-    <button class="outline danger-white" @click="deleteAllFiles">{{ labelDeleteAll }}</button>
-    <button class="outline green-white" @click="send">{{ labelSend }}</button>
+       :class="{disabled}">
+    <button v-if="show" :disabled="disabled" class="outline danger-white" @click="deleteAllFiles">{{
+        labelDeleteAll
+      }}
+    </button>
+    <button v-if="show" :disabled="disabled" class="outline green-white" @click="send">{{ labelSend }}</button>
+    <span v-if="!show">&nbsp;</span>
   </div>
 
 </template>
@@ -11,6 +15,10 @@
 export default {
   name: 'Buttons',
   props: {
+    show: {
+      type: Boolean,
+      default: true
+    },
     labelDeleteAll: {
       type: String,
       default: 'Tout effacer',
@@ -26,15 +34,9 @@ export default {
   },
   methods: {
     deleteAllFiles() {
-      if (this.disabled) {
-        return;
-      }
       this.$emit('onDeleteAll', {});
     },
     send() {
-      if (this.disabled) {
-        return;
-      }
       this.$emit('onSend', {});
     }
   }
@@ -44,12 +46,16 @@ export default {
 @import url("../assets/disabled.css");
 
 .buttons {
-  --buttons-background-color: #fff;
-  --buttons-danger-color: #db4437;
-  --buttons-success-color: #7dc21e;
+  --buttons-background-color: var(--sfc-background-color, #e3e3e3);
+  --buttons-danger-color: var(--sfc-danger-color, #d44034);
+  --buttons-success-color: var(--sfc-success-color, #649d19);
+  --buttons-height: 40px;
   width: 100%;
   display: flex;
   justify-content: space-around;
+  margin: .5em;
+  height: var(--buttons-height);
+  min-height: var(--buttons-height);
 }
 
 
@@ -62,9 +68,9 @@ export default {
   position: relative;
   z-index: 3;
   background: transparent;
-  color: var(--uploader-color);
+  color: var(--progress-color);
   font-size: 14px;
-  border-color: var(--uploader-color);
+  border-color: var(--progress-color);
   border-style: solid;
   border-width: 2px;
   border-radius: 22px;
@@ -79,7 +85,7 @@ export default {
 
 .buttons button.outline:hover {
   color: var(--buttons-background-color);
-  background: var(--uploader-color);
+  background: var(--progress-color);
   border-color: var(--buttons-background-color);
   transition: all 0.2s linear;
 }

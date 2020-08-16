@@ -1,16 +1,17 @@
 <template>
   <div id="app">
-    <Fileupload></Fileupload>
+    <secure-file-upload :accept="['JPG','PNG']"
+                        token="700ceaa4-457c-4cee-b6f1-a5d6f1ffbf43"></secure-file-upload>
   </div>
 </template>
 
 <script>
-import Fileupload from './components/Fileupload'
+import SecureFileUpload from './components/SecureFileUpload'
 
 export default {
   name: 'App',
   components: {
-    Fileupload
+    SecureFileUpload
   }
 }
 </script>
@@ -23,5 +24,7 @@ export default {
   text-align: center;
   color: #2c3e50;
   margin-top: 60px;
+  display: flex;
+  justify-content: center;
 }
 </style>

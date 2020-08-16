@@ -4,3 +4,4 @@ build
 redis/*.rdb
 gradle
 src/main/resources/webroot/wc
+file-uploads

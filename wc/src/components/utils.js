@@ -11,7 +11,7 @@ export function isXhr2() {
     return (xhr.upload);
 }
 
-class Extension {
+export class Extension {
     constructor(name, extensions, mimetype) {
         this.name = name;
         this.extensions = extensions;
@@ -19,19 +19,21 @@ class Extension {
     }
 
     parse(item) {
-        console.log(this.name)
-        return item || item.toUpperCase() === this.name;
+        if (!item) {
+            return false;
+        }
+        return item.toUpperCase() === this.name;
     }
 
     match(filename) {
         return this.extensions
             .map(e => new RegExp(`\\.${e}$`, 'gi'))
-            .find(r => r.test(filename));
+            .findIndex(r => r.test(filename)) > -1;
     }
 
     isImage() {
         return this.extensions
-            .find(e => /GIF|JPG|PNG|JPEG/.test(e));
+            .findIndex(e => /GIF|JPG|PNG|JPEG/.test(e)) > -1;
     }
 
     isPDF() {
@@ -44,13 +46,12 @@ export const JPG = new Extension('JPG', ['JPG', 'JPEG'], 'image/jpg');
 export const PNG = new Extension('PNG', ['PNG'], 'image/png');
 
 export const ALL_EXTENSIONS = [PDF, PNG, JPG];
-export const ALL_NAMES = ALL_EXTENSIONS.map(e => e.name);
 
 export function convert2Extensions(names) {
+    console.log(names)
     return (names || [])
         .map(n => {
-            console.log(n)
-           return  ALL_EXTENSIONS.find(e => e.parse(n));
+            return ALL_EXTENSIONS.find(e => e.parse(n));
         })
         .filter(e => (e));
 }
@@ -64,5 +65,15 @@ export function accept(extensions) {
             }
             return `${acc},${e}`;
         }, '');
+}
+
+export function createEndPoint(url, token) {
+    if (url) {
+        return url;
+    }
+    if (token) {
+        return `/upload/${token}`
+    }
+    throw new Error('Token or url are required to send data');
 }
 

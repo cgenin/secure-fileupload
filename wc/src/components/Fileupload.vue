@@ -1,8 +1,8 @@
 <template>
   <div class="uploader"
-       :class="{disabled}">
+       :class="{disabled, skeleton:loading}">
     <label class="file-drag"
-           :class="{hover:dragover,'modal-body file-upload':!dragover }"
+           :class="{hover: dragover}"
            @dragover="fileDragHover"
            @dragleave="fileDragHover"
            @drop="fileSelectHandler"
@@ -19,7 +19,6 @@
       <div v-if="displayUpload" class="start">
         <i class="icon-download" :title="description" aria-hidden="true"></i>
         <div>{{ description }}</div>
-        <div class="notimage hidden">Please select an image</div>
         <span class="file-upload-btn btn btn-primary">
             {{ buttonLabel }}
           </span>
@@ -33,9 +32,6 @@
                             @onDelete="deleteOneFilehandler"
         />
       </div>
-      <progress class="progress hidden" id="file-progress" value="0">
-        <span>0</span>%
-      </progress>
     </label>
   </div>
 </template>
@@ -47,6 +43,10 @@ export default {
   name: 'file-upload',
   props: {
     multiple: {
+      type: Boolean,
+      default: false,
+    },
+    loading: {
       type: Boolean,
       default: false,
     },
@@ -78,6 +78,7 @@ export default {
   },
   mounted() {
     this.isXhr2 = isXhr2();
+    this.$emit('setDeleteAll', this.deleteAllFiles);
   },
   created() {
     this.inputName = uuidv4();
@@ -87,7 +88,6 @@ export default {
       return this.files.length === 0;
     },
     extensions() {
-      console.log(convert2Extensions(this.accept))
       return convert2Extensions(this.accept);
     },
     acceptStr() {
@@ -96,7 +96,7 @@ export default {
   },
   methods: {
     fileSelectHandler(e) {
-      if (this.disabled) {
+      if (this.disabled || this.loading) {
         return;
       }
 
@@ -117,7 +117,7 @@ export default {
       }
     },
     deleteOneFilehandler(file2Delete) {
-      if (this.disabled) {
+      if (this.disabled || this.loading) {
         return;
       }
       if (this.files.length === 1) {
@@ -144,14 +144,15 @@ export default {
 }
 </script>
 <style scoped>
+@import url("../assets/skeleton.css");
+@import "../assets/disabled.css";
 
 .uploader {
-  --uploader-danger-color: #db4437;
-  --uploader-color: #454cad;
-  --uploader-progress-color: #393f90;
-  --uploader-background-color: #fff;
-  --uploader-border-color: #eeeeee;
-  --uploader-text-color: #5f6982;
+  --uploader-danger-color: var(--sfc-danger-color, #d44034);
+  --uploader-color: var(--sfc-color, #454cad);
+  --uploader-background-color: var(--sfc-background-color, #fff);
+  --uploader-border-color: var(--sfc-border-color, #eeeeee);
+  --uploader-text-color: var(--sfc-text-color, #5f6982);
 }
 
 .uploader {
@@ -172,7 +173,7 @@ export default {
   float: left;
   clear: both;
   width: 100%;
-  padding: 2rem 1.5rem;
+  padding: .5rem 1.5rem;
   text-align: center;
   background: var(--uploader-background-color);
   border-radius: 7px;
@@ -222,47 +223,6 @@ export default {
 
 }
 
-
-.uploader .notimage {
-  display: block;
-  float: left;
-  clear: both;
-  width: 100%;
-}
-
-.uploader .notimage.hidden {
-  display: none;
-}
-
-.uploader progress,
-.uploader .progress {
-  display: inline;
-  clear: both;
-  margin: 0 auto;
-  width: 100%;
-  max-width: 180px;
-  height: 8px;
-  border: 0;
-  border-radius: 4px;
-  background-color: var(--uploader-border-color);
-  overflow: hidden;
-}
-
-.uploader .progress[value]::-webkit-progress-bar {
-  border-radius: 4px;
-  background-color: var(--uploader-border-color);
-}
-
-.uploader .progress[value]::-webkit-progress-value {
-  background: -webkit-gradient(linear, left top, right top, from(var(--uploader-progress-color)), color-stop(50%, var(--uploader-color)));
-  background: linear-gradient(to right, var(--uploader-progress-color) 0%, var(--uploader-color) 50%);
-  border-radius: 4px;
-}
-
-.uploader .progress[value]::-moz-progress-bar {
-  background: linear-gradient(to right, var(--uploader-progress-color) 0%, var(--uploader-color) 50%);
-  border-radius: 4px;
-}
 
 .uploader input[type="file"] {
 
