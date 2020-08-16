@@ -6,7 +6,8 @@
              @onSend="onSend"
     />
     <progress-bar :show="loading || result" :value="progress"></progress-bar>
-    <file-upload v-if="!result" :accept="accept"
+    <file-upload v-if="!result"
+                 :accept="extensions"
                  :multiple="multiple"
                  :disabled="disabled"
                  v-bind="labels"
@@ -44,7 +45,7 @@ export default {
       default: ''
     },
     accept: {
-      type: Array,
+      type: String,
       required: true
     },
     labels: {
@@ -66,6 +67,12 @@ export default {
     hasFile() {
       const { files } = this;
       return files && files.length > 0;
+    },
+    extensions() {
+      if (!this.accept) {
+        return [];
+      }
+      return this.accept.split(',');
     }
   },
   methods: {

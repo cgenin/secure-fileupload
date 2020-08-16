@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Mise à jour de document</title>
+    <style type="text/css">
+        .container {
+            display: flex;
+            justify-content: center;
+        }
+    </style>
+</head>
+<body>
+<div class="container">
+    <cg-rest-file-upload token="{{id}}" accept="{{accept}}"></cg-rest-file-upload>
+</div>
+<script src="/static/wc/cg.min.js"></script>
+<script>
+    function close(evt) {
+        if (evt.success) {
+            window.close();
+            return;
+        }
+        document.location.reload();
+    }
+
+    document.addEventListener('DOMContentLoaded', function () {
+        document.querySelector('cg-rest-file-upload')
+                .addEventListener('onClose', close);
+    });
+</script>
+</body>
+</html>

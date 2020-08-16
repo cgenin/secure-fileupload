@@ -22,7 +22,7 @@ export class Extension {
         if (!item) {
             return false;
         }
-        return item.toUpperCase() === this.name;
+        return item.trim().toUpperCase() === this.name;
     }
 
     match(filename) {

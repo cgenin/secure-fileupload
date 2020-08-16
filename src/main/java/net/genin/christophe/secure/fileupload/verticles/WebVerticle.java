@@ -11,6 +11,8 @@ import io.vertx.reactivex.core.eventbus.Message;
 import io.vertx.reactivex.ext.web.Router;
 import io.vertx.reactivex.ext.web.handler.BodyHandler;
 import io.vertx.reactivex.ext.web.handler.StaticHandler;
+import io.vertx.reactivex.ext.web.handler.TemplateHandler;
+import io.vertx.reactivex.ext.web.templ.handlebars.HandlebarsTemplateEngine;
 import net.genin.christophe.secure.fileupload.Api;
 import net.genin.christophe.secure.fileupload.Jsons;
 import net.genin.christophe.secure.fileupload.models.Upload;
@@ -28,11 +30,12 @@ public class WebVerticle extends AbstractVerticle {
     public void start() {
         final String host = config().getString("HOST", "localhost");
         final int port = config().getInteger("PORT", 8000);
-
         final Router router = Router.router(vertx)
                 .mountSubRouter("/upload", upload())
+                .mountSubRouter("/public", template())
                 .mountSubRouter("/api", new Api(vertx).build())
-                .mountSubRouter("/static", staticFiles());
+                .mountSubRouter("/static", staticFiles())
+                ;
 
         vertx
                 .createHttpServer()
@@ -45,6 +48,42 @@ public class WebVerticle extends AbstractVerticle {
                             vertx.close();
                         }
                 );
+    }
+
+    private Router template() {
+        final Router router = Router.router(vertx);
+        final HandlebarsTemplateEngine engine = HandlebarsTemplateEngine.create(vertx);
+        final TemplateHandler templateHandler = TemplateHandler.create(engine);
+        router.route().path("/:id.html").handler(rc -> {
+            final String id = rc.pathParam("id");
+
+            vertx.eventBus().<JsonObject>rxRequest(DbVerticle.GET, "registered:" + id)
+                    .map(Message::body)
+                    .map(event -> {
+                        final String accept = event.getJsonArray("extensions").stream()
+                                .map(Object::toString)
+                                .reduce("", (acc, v) -> {
+                                    if (acc.isEmpty())
+                                        return v;
+                                    return acc + "," + v;
+                                });
+                        return new JsonObject().put("id", id)
+                                .put("accept", accept);
+                    })
+                    .flatMap(json -> engine.rxRender(json, "templates/uploadform.hbs"))
+                    .subscribe(b -> {
+                                rc.response()
+                                        .putHeader(HttpHeaders.CONTENT_TYPE, "text/html; charset=utf-8")
+                                        .end(b);
+                            },
+                            t -> {
+                                LOG.error("error in rendering" + id, t);
+                                rc.response().setStatusCode(400).end();
+                            });
+
+        });
+        router.route().handler(templateHandler);
+        return router;
     }
 
     private Router staticFiles() {
