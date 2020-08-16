@@ -16,7 +16,7 @@ public class Main {
             final JsonObject json = r.result();
             new Deployments(vertx, json)
                     .deploy(new RegisterVerticle(), new DbVerticle(), new UploadVerticle(),
-                            new WebVerticle())
+                            new GzVerticle(), new WebVerticle())
                     .subscribe();
 
         });

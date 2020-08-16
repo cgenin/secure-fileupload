@@ -1,9 +1,13 @@
 package net.genin.christophe.secure.fileupload.verticles;
 
+import io.vertx.core.buffer.Buffer;
+import io.vertx.core.http.HttpHeaders;
+import io.vertx.core.http.impl.MimeMapping;
 import io.vertx.core.json.JsonObject;
 import io.vertx.core.logging.Logger;
 import io.vertx.core.logging.LoggerFactory;
 import io.vertx.reactivex.core.AbstractVerticle;
+import io.vertx.reactivex.core.eventbus.Message;
 import io.vertx.reactivex.ext.web.Router;
 import io.vertx.reactivex.ext.web.handler.BodyHandler;
 import io.vertx.reactivex.ext.web.handler.StaticHandler;
@@ -13,10 +17,12 @@ import net.genin.christophe.secure.fileupload.models.Upload;
 import net.genin.christophe.secure.fileupload.models.UploadedFile;
 
 import java.util.List;
+import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
 public class WebVerticle extends AbstractVerticle {
     private static final Logger LOG = LoggerFactory.getLogger(WebVerticle.class);
+    public static final Pattern WEB_COMPONENT_PATH = Pattern.compile("/static/wc/");
 
     @Override
     public void start() {
@@ -43,6 +49,20 @@ public class WebVerticle extends AbstractVerticle {
 
     private Router staticFiles() {
         final Router router = Router.router(vertx);
+        router.route().path("/wc/*").handler(rc -> {
+            final String path = WEB_COMPONENT_PATH.matcher(rc.request().path()).replaceAll("");
+            vertx.eventBus().<Buffer>rxRequest(GzVerticle.GET, path)
+                    .map(Message::body)
+                    .subscribe(buffer -> {
+                                String contentType = MimeMapping.getMimeTypeForFilename(path);
+                                rc.response().putHeader(HttpHeaders.CONTENT_TYPE, contentType)
+                                        .putHeader(HttpHeaders.CONTENT_ENCODING, "gzip")
+                                        .end(io.vertx.reactivex.core.buffer.Buffer.newInstance(buffer));
+
+                            },
+                            t -> rc.next());
+
+        });
         router.route("/*").handler(StaticHandler.create());
         return router;
     }
