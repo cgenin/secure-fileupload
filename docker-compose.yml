@@ -5,6 +5,11 @@ services:
     environment:
       - HOST=0.0.0.0
       - REDIS_ENDPOINT=redis://redis:6379
+      - TEST_EXTENSIONS=["JPG", "PDF"]
+      - TEST_EXPIRE=300
+      - UPLOAD_DIRECTORY=/upload
+      - CORS_ORIGIN=localhost
+
     ports:
       - "8000:8000"
   redis:
