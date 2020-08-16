@@ -9,6 +9,7 @@ import java.util.*;
 
 public class Event {
     private String idApplication;
+    private String idClient;
     private String id;
     private String state;
     private List<String> extensions;
@@ -70,5 +71,13 @@ public class Event {
 
     public void setCreated(long created) {
         this.created = created;
+    }
+
+    public String getIdClient() {
+        return idClient;
+    }
+
+    public void setIdClient(String idClient) {
+        this.idClient = idClient;
     }
 }
