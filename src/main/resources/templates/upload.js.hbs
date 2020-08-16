@@ -1,0 +1,29 @@
+window.CG =  window.CG || {};
+if(window.CG.addUploadIn){
+console.log('Function add already exists. this script replace the old one');
+}
+window.CG.addScript = function(cb) {
+    var scriptElement = document.createElement('script');
+    scriptElement.src = '{{host}}/static/wc/cg.min.js';
+    scriptElement.onload = cb;
+    document.body.appendChild(scriptElement);
+};
+window.CG.addUploadIn=function(selector, closeCallback, successCallback, errorCallback) {
+  function createUploader(){
+    var parent = document.querySelector(selector);
+    var elt = document.createElement('cg-rest-file-upload');
+    parent.appendChild(elt);
+    elt.setAttribute('url', '{{host}}/upload/{{id}}');
+    elt.setAttribute('accept','{{accept}}');
+    if(closeCallback){
+        elt.addEventListener('onClose', closeCallback);
+    }
+    if(successCallback){
+        elt.addEventListener('onSuccess', successCallback);
+    }
+    if(errorCallback){
+        elt.addEventListener('onError', errorCallback);
+    }
+  }
+  CG.addScript(createUploader);
+};
