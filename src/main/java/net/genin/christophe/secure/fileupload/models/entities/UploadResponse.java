@@ -1,4 +1,4 @@
-package net.genin.christophe.secure.fileupload.models;
+package net.genin.christophe.secure.fileupload.models.entities;
 
 import java.util.Map;
 

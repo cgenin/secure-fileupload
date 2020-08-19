@@ -24,7 +24,7 @@ public class DbVerticle extends AbstractVerticle {
 
 
     @Override
-    public void start() throws Exception {
+    public void start() {
         final String redisEndpoint = config().getString("REDIS_ENDPOINT", "redis://localhost:6379");
         // TODO export env variables
         final RedisOptions options = new RedisOptions().addConnectionString(redisEndpoint)
@@ -67,15 +67,15 @@ public class DbVerticle extends AbstractVerticle {
                         mmsg.reply(false);
                     });
         });
-        vertx.eventBus().<String>consumer(PING, mmsg -> {
-            RedisAPI.api(client)
-                    .rxPing(Collections.singletonList("TRUE"))
-                    .map(Response::toString)
-                    .subscribe(
-                            b -> mmsg.reply("TRUE".equals(b)),
-                            t -> mmsg.reply(false)
-                    );
-        });
+        vertx.eventBus().<String>consumer(PING, mmsg ->
+                RedisAPI.api(client)
+                        .rxPing(Collections.singletonList("TRUE"))
+                        .map(Response::toString)
+                        .subscribe(
+                                b -> mmsg.reply("TRUE".equals(b)),
+                                t -> mmsg.reply(false)
+                        )
+        );
         vertx.eventBus().<String>consumer(GET, mmsg -> {
             final String key = mmsg.body();
 

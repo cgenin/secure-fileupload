@@ -4,7 +4,7 @@ import com.itextpdf.text.pdf.PdfArray;
 import com.itextpdf.text.pdf.PdfName;
 import com.itextpdf.text.pdf.PdfReader;
 import io.reactivex.Single;
-import net.genin.christophe.secure.fileupload.models.UploadedFile;
+import net.genin.christophe.secure.fileupload.models.entities.UploadedFile;
 import net.genin.christophe.secure.fileupload.models.adapters.FileAdapter;
 
 import java.util.Objects;

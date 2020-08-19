@@ -5,38 +5,33 @@ import io.reactivex.Single;
 import net.genin.christophe.secure.fileupload.models.adapters.FileAdapter;
 import net.genin.christophe.secure.fileupload.models.adapters.SaveUploadAdapter;
 import net.genin.christophe.secure.fileupload.models.adapters.UploadEventAdapter;
+import net.genin.christophe.secure.fileupload.models.entities.Upload;
+import net.genin.christophe.secure.fileupload.models.entities.UploadResponse;
+import net.genin.christophe.secure.fileupload.models.entities.UploadState;
+import net.genin.christophe.secure.fileupload.models.entities.UploadedFile;
 
-import java.util.Date;
 import java.util.HashMap;
-import java.util.List;
 
-@SuppressWarnings("unused")
-public class Upload {
+public class UploadFiles {
 
-    private String idApplication;
-    private List<UploadedFile> files;
-    private long created;
-    private Event event;
+    public final Upload upload;
 
-    public Upload() {
-    }
-
-    public Upload(String idApplication, List<UploadedFile> files) {
-        this.idApplication = idApplication;
-        this.files = files;
-        this.created = new Date().getTime();
+    public UploadFiles(Upload upload) {
+        this.upload = upload;
     }
 
     public Single<UploadResponse> upload(UploadEventAdapter uploadEventAdapter, FileAdapter fileAdapter,
                                          SaveUploadAdapter saveUploadAdapter) {
+        final String idApplication = upload.getIdApplication();
         return uploadEventAdapter.findByIdApplication(idApplication)
                 .flatMap(event -> {
-                    setEvent(event);
+                    upload.setEvent(event);
                     // Suppress Event for not reusing
                     uploadEventAdapter.delete(event);
-                    return Observable.fromIterable(getFiles())
+                    return Observable.fromIterable(upload.getFiles())
                             .flatMap(uf ->
-                                    uf.valid(event, fileAdapter)
+                                    new ValidOneFile(uf)
+                                            .valid(event, fileAdapter)
                                             .map(state -> {
                                                 if (!state.equals(UploadState.valid)) {
                                                     fileAdapter.delete(uf.getUploadedFileName());
@@ -54,7 +49,7 @@ public class Upload {
                                 acc.putAll(v);
                                 return acc;
                             })
-                            .doOnSuccess(m -> saveUploadAdapter.saveAndNotify(this))
+                            .doOnSuccess(m -> saveUploadAdapter.saveAndNotify(upload))
                             .map(map -> {
                                 final UploadResponse uploadResponse = new UploadResponse();
                                 final Integer code = map.values().stream().max(Integer::compareTo).orElse(200);
@@ -65,7 +60,7 @@ public class Upload {
                 })
                 // Suppress all files if no event found
                 .doOnError(t ->
-                        files.stream().map(UploadedFile::getUploadedFileName)
+                        upload.getFiles().stream().map(UploadedFile::getUploadedFileName)
                                 .forEach(fileAdapter::delete)
                 )
                 // Message for no event found
@@ -75,37 +70,4 @@ public class Upload {
                     return uploadResponse;
                 });
     }
-
-    public void setIdApplication(String idApplication) {
-        this.idApplication = idApplication;
-    }
-
-    public void setFiles(List<UploadedFile> files) {
-        this.files = files;
-    }
-
-    public void setCreated(long created) {
-        this.created = created;
-    }
-
-    public long getCreated() {
-        return created;
-    }
-
-    public String getIdApplication() {
-        return idApplication;
-    }
-
-    public List<UploadedFile> getFiles() {
-        return files;
-    }
-
-    public Event getEvent() {
-        return event;
-    }
-
-    public void setEvent(Event event) {
-        this.event = event;
-    }
-
 }

@@ -18,7 +18,7 @@ import java.util.regex.Pattern;
 
 public class Templates {
     private static final Logger LOG = LoggerFactory.getLogger(Templates.class);
-    public static final Pattern REFERER_REGEXP = Pattern.compile("(http[s]{0,1}://[^/]+)/");
+    public static final Pattern REFERER_REGEXP = Pattern.compile("(http[s]?://[^/]+)/");
     private final Vertx vertx;
     private final HandlebarsTemplateEngine engine;
     private final TemplateHandler templateHandler;

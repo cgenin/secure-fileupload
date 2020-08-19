@@ -4,7 +4,7 @@ import io.vertx.config.ConfigRetrieverOptions;
 import io.vertx.config.ConfigStoreOptions;
 import io.vertx.reactivex.config.ConfigRetriever;
 import io.vertx.reactivex.core.Vertx;
-import net.genin.christophe.secure.fileupload.models.Event;
+import net.genin.christophe.secure.fileupload.models.entities.Event;
 
 public final class Utils {
 

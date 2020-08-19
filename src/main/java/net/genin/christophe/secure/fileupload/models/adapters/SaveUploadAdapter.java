@@ -1,6 +1,6 @@
 package net.genin.christophe.secure.fileupload.models.adapters;
 
-import net.genin.christophe.secure.fileupload.models.Upload;
+import net.genin.christophe.secure.fileupload.models.entities.Upload;
 
 public interface SaveUploadAdapter {
 

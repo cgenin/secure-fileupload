@@ -41,9 +41,11 @@ export class Extension {
     }
 }
 
-export const PDF = new Extension('PDF', ['PDF'], 'application/pdf');
-export const JPG = new Extension('JPG', ['JPG', 'JPEG'], 'image/jpg');
-export const PNG = new Extension('PNG', ['PNG'], 'image/png');
+export const PDF = new Extension('PDF', ['PDF'], ['application/pdf']);
+export const JPG = new Extension('JPG', ['JPG', 'JPEG'], ['image/jpg']);
+export const PNG = new Extension('PNG', ['PNG'], ['image/png']);
+export const WORD = new Extension('WORD', ['DOC', 'DOCX'], ['application/msword',
+    'application/vnd.openxmlformats-officedocument.wordprocessingml.document']);
 
 export const ALL_EXTENSIONS = [PDF, PNG, JPG];
 
@@ -58,7 +60,7 @@ export function convert2Extensions(names) {
 
 export function accept(extensions) {
     return extensions
-        .map(e => e.mimetype)
+        .flatMap(e => e.mimetype)
         .reduce((acc, e) => {
             if (acc.length === 0) {
                 return e;

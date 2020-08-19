@@ -2,8 +2,8 @@ package net.genin.christophe.secure.fileupload.models.sanitizer;
 
 import io.reactivex.Observable;
 import io.reactivex.Single;
-import net.genin.christophe.secure.fileupload.models.Extensions;
-import net.genin.christophe.secure.fileupload.models.UploadedFile;
+import net.genin.christophe.secure.fileupload.models.entities.Extensions;
+import net.genin.christophe.secure.fileupload.models.entities.UploadedFile;
 import net.genin.christophe.secure.fileupload.models.adapters.FileAdapter;
 import net.sf.jmimemagic.Magic;
 import org.slf4j.Logger;
@@ -65,7 +65,9 @@ public class ImageSanitizer {
                     if (LOG.isDebugEnabled()) {
                         LOG.debug("description of " + magicMatch.print());
                     }
-                    final boolean isGoodMimeType = magicMatch.getMimeType().equals(extensions.getMimetype());
+                    final boolean isGoodMimeType = extensions.getMimetype()
+                            .stream()
+                            .anyMatch(s -> magicMatch.getMimeType().equals(s));
                     if (!isGoodMimeType) {
                         throw new IllegalStateException("Wrong mime types " + magicMatch.getMimeType() + "/" + extensions.getMimetype() + " for " + uploadedFile);
                     }

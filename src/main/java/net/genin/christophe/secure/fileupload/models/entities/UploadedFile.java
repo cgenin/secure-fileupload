@@ -1,9 +1,13 @@
-package net.genin.christophe.secure.fileupload.models;
+package net.genin.christophe.secure.fileupload.models.entities;
 
 import io.reactivex.Single;
+import io.reactivex.SingleSource;
+import io.reactivex.functions.Function;
 import net.genin.christophe.secure.fileupload.models.adapters.FileAdapter;
+import net.genin.christophe.secure.fileupload.models.sanitizer.ExcelsSanitizer;
 import net.genin.christophe.secure.fileupload.models.sanitizer.ImageSanitizer;
 import net.genin.christophe.secure.fileupload.models.sanitizer.PdfSanitizer;
+import net.genin.christophe.secure.fileupload.models.sanitizer.WordSanitizer;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -11,10 +15,9 @@ import java.util.Objects;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+@SuppressWarnings("unused")
 public class UploadedFile {
-    private static final Logger LOG = LoggerFactory.getLogger(UploadedFile.class);
 
-    public static final Pattern EXTENSIONS = Pattern.compile("\\.(.*)$");
     private String name;
     private String uploadedFileName;
     private String fileName;
@@ -37,53 +40,6 @@ public class UploadedFile {
         this.size = size;
     }
 
-    public Single<UploadState> valid(Event event, FileAdapter fileAdapter) {
-
-        if (fileName.split("\\.").length != 2) {
-            return Single.just(UploadState.multiple_extensions);
-        }
-        final Matcher matcher = EXTENSIONS.matcher(fileName);
-        if (!matcher.find()) {
-            return Single.just(UploadState.invalid_extension);
-        }
-
-        final String extensionStr = matcher.group(1);
-        final Extensions extension = Extensions.parseByExtension(extensionStr);
-        if (Objects.isNull(extension)) {
-            return Single.just(UploadState.invalid_extension);
-        }
-        final boolean isAuthorize = event.getExtensions().stream()
-                .map(Extensions::valueOf)
-                .anyMatch(extension::equals);
-        if (!isAuthorize) {
-            return Single.just(UploadState.invalid_extension);
-        }
-
-        switch (extension) {
-            case PNG:
-            case JPEG:
-                return new ImageSanitizer(this)
-                        .sanitize(extension, fileAdapter)
-                        .map(b -> UploadState.valid)
-                        .onErrorResumeNext(t -> {
-                            LOG.error("Error in sanitizing file " + this, t);
-                            return Single.just(UploadState.wrong_sanitization);
-                        });
-            case PDF:
-                return new PdfSanitizer(this)
-                        .sanitize(fileAdapter)
-                        .map(b-> UploadState.valid)
-                        .onErrorResumeNext(t -> {
-                            LOG.error("Error in sanitizing file " + this, t);
-                            return Single.just(UploadState.wrong_sanitization);
-                        });
-            default:
-                LOG.warn("not sanitize type " + extension);
-        }
-
-
-        return Single.just(UploadState.valid);
-    }
 
     public String getName() {
         return name;

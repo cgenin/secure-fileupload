@@ -8,9 +8,10 @@ import io.vertx.reactivex.core.AbstractVerticle;
 import io.vertx.reactivex.core.eventbus.Message;
 import net.genin.christophe.secure.fileupload.Jsons;
 import net.genin.christophe.secure.fileupload.Utils;
-import net.genin.christophe.secure.fileupload.models.Event;
+import net.genin.christophe.secure.fileupload.models.QueryUpload;
 import net.genin.christophe.secure.fileupload.models.adapters.ConfigurationAdapter;
 import net.genin.christophe.secure.fileupload.models.adapters.CreateEventAdapter;
+import net.genin.christophe.secure.fileupload.models.entities.Event;
 
 import java.util.List;
 
@@ -25,7 +26,7 @@ public class RegisterVerticle extends AbstractVerticle implements ConfigurationA
                 Single.just(msg)
                         .map(Message::body)
                         .map(b -> b.mapTo(Event.class))
-                        .flatMap(event -> event.register(this, this))
+                        .flatMap(event -> new QueryUpload(event).save(this, this))
                         .subscribe(msg::reply, t -> {
                             LOG.error("REGISTER_NEW", t);
                             msg.fail(500, "error");

@@ -1,4 +1,4 @@
-package net.genin.christophe.secure.fileupload.models;
+package net.genin.christophe.secure.fileupload.models.entities;
 
 import io.reactivex.Single;
 import io.vertx.core.json.JsonObject;
@@ -16,20 +16,6 @@ public class Event {
     private long created;
 
     public Event() {
-    }
-
-    public Single<JsonObject> register(ConfigurationAdapter configurationAdapter, CreateEventAdapter createEventAdapter) {
-        Objects.requireNonNull(idApplication, "idApplication must not be null");
-        extensions = Optional.ofNullable(configurationAdapter.extensionsIdApplication(idApplication))
-                .filter(l -> !l.isEmpty())
-                .orElseThrow(() -> new IllegalArgumentException("No extensions found for " + idApplication));
-        final Long seconds = Optional.ofNullable(configurationAdapter.validateTimeByIdApplication(idApplication))
-                .orElseThrow(() -> new IllegalArgumentException("No validate time found for " + idApplication));
-        created = new Date().getTime();
-        setId(UUID.randomUUID().toString());
-        state = EventState.registered.name();
-        return createEventAdapter.createDuring(this, seconds)
-                .map(b -> new JsonObject().put("id", id));
     }
 
 

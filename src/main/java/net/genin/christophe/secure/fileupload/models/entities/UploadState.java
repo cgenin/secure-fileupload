@@ -1,4 +1,4 @@
-package net.genin.christophe.secure.fileupload.models;
+package net.genin.christophe.secure.fileupload.models.entities;
 
 public enum UploadState {
     valid(200),
@@ -10,7 +10,7 @@ public enum UploadState {
     private final int code;
 
 
-    private UploadState(int code) {
+    UploadState(int code) {
         this.code = code;
     }
 

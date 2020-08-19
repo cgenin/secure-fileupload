@@ -2,7 +2,6 @@ package net.genin.christophe.secure.fileupload;
 
 import io.reactivex.Observable;
 import io.reactivex.Single;
-import io.reactivex.disposables.Disposable;
 import io.vertx.core.DeploymentOptions;
 import io.vertx.core.Verticle;
 import io.vertx.core.json.JsonArray;
