@@ -7,7 +7,7 @@ import net.genin.christophe.secure.fileupload.domain.adapters.FileAdapter;
 import net.genin.christophe.secure.fileupload.domain.entities.Event;
 import net.genin.christophe.secure.fileupload.domain.valueobject.Extensions;
 import net.genin.christophe.secure.fileupload.domain.valueobject.UploadState;
-import net.genin.christophe.secure.fileupload.domain.entities.UploadedFile;
+import net.genin.christophe.secure.fileupload.domain.entities.File;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -16,19 +16,19 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 
-public class ValidOneFile {
-    private static final Logger LOG = LoggerFactory.getLogger(UploadedFile.class);
+class ValidOneFile {
+    private static final Logger LOG = LoggerFactory.getLogger(File.class);
 
     public static final Pattern EXTENSIONS = Pattern.compile("\\.(.*)$");
-    public final UploadedFile uploadedFile;
+    public final File file;
 
-    public ValidOneFile(UploadedFile uploadedFile) {
-        this.uploadedFile = uploadedFile;
+    public ValidOneFile(File file) {
+        this.file = file;
     }
 
 
     public Single<UploadState> valid(Event event, FileAdapter fileAdapter) {
-        final String fileName = uploadedFile.getFileName();
+        final String fileName = file.getFileName();
         if (fileName.split("\\.").length != 2) {
             return Single.just(UploadState.multiple_extensions);
         }
@@ -56,22 +56,22 @@ public class ValidOneFile {
         switch (extension) {
             case PNG:
             case JPEG:
-                return new ImageSanitizer(uploadedFile)
+                return new ImageSanitizer(file)
                         .sanitize(extension, fileAdapter)
                         .map(b -> UploadState.valid)
                         .onErrorResumeNext(errorResumeNext);
             case PDF:
-                return new PdfSanitizer(uploadedFile)
+                return new PdfSanitizer(file)
                         .sanitize(fileAdapter)
                         .map(b -> UploadState.valid)
                         .onErrorResumeNext(errorResumeNext);
             case WORD:
-                return new WordSanitizer(uploadedFile)
+                return new WordSanitizer(file)
                         .sanitize(fileAdapter)
                         .map(b -> UploadState.valid)
                         .onErrorResumeNext(errorResumeNext);
             case EXCEL:
-                return new ExcelsSanitizer(uploadedFile)
+                return new ExcelsSanitizer(file)
                         .sanitize(fileAdapter)
                         .map(b -> UploadState.valid)
                         .onErrorResumeNext(errorResumeNext);

@@ -4,28 +4,28 @@ import com.itextpdf.text.pdf.PdfArray;
 import com.itextpdf.text.pdf.PdfName;
 import com.itextpdf.text.pdf.PdfReader;
 import io.reactivex.Single;
-import net.genin.christophe.secure.fileupload.domain.entities.UploadedFile;
+import net.genin.christophe.secure.fileupload.domain.entities.File;
 import net.genin.christophe.secure.fileupload.domain.adapters.FileAdapter;
 
 import java.util.Objects;
 import java.util.Optional;
 
-public class PdfSanitizer {
-    private final UploadedFile uploadedFile;
+class PdfSanitizer {
+    private final File file;
 
-    public PdfSanitizer(UploadedFile uploadedFile) {
-        this.uploadedFile = uploadedFile;
+    public PdfSanitizer(File file) {
+        this.file = file;
     }
 
     public Single<Boolean> sanitize(FileAdapter fileAdapter) {
-        return fileAdapter.readContentFile(uploadedFile.getUploadedFileName())
+        return fileAdapter.readContentFile(file.getUploadedFileName())
                 .map(PdfReader::new)
                 .map(reader -> {
                     // Check 1:
                     // Detect if the document contains any JavaScript code
                     String jsCode = reader.getJavaScript();
                     if (Objects.nonNull(jsCode))
-                        throw new IllegalStateException("The file " + uploadedFile + " has embedded javascript");
+                        throw new IllegalStateException("The file " + file + " has embedded javascript");
                     return reader;
                 })
                 .map(reader -> {
@@ -37,7 +37,7 @@ public class PdfSanitizer {
                             .map(e -> e.getAsArray(PdfName.NAMES))
                             .orElse(null);
                     if (Objects.nonNull(namesArray) && !namesArray.isEmpty()) {
-                        throw new IllegalStateException("The file " + uploadedFile + " has embedded files");
+                        throw new IllegalStateException("The file " + file + " has embedded files");
                     }
                     return true;
                 });

@@ -4,7 +4,7 @@ import io.reactivex.Single;
 import io.reactivex.observers.TestObserver;
 import net.genin.christophe.secure.fileupload.domain.adapters.FileAdapter;
 import net.genin.christophe.secure.fileupload.domain.entities.Event;
-import net.genin.christophe.secure.fileupload.domain.entities.UploadedFile;
+import net.genin.christophe.secure.fileupload.domain.entities.File;
 import net.genin.christophe.secure.fileupload.domain.valueobject.UploadState;
 import org.junit.Before;
 import org.junit.Test;
@@ -22,7 +22,7 @@ import static org.mockito.Mockito.when;
 public class PdfValidOneFileTest {
 
 
-    private UploadedFile uploadedFile;
+    private File file;
     private Event event;
     private FileAdapter fileAdapter;
     private byte[] pdfBytes;
@@ -32,9 +32,9 @@ public class PdfValidOneFileTest {
 
     @Before
     public void init() throws IOException {
-        uploadedFile = new UploadedFile();
-        uploadedFile.setFileName("test.pdf");
-        uploadedFile.setUploadedFileName("toto");
+        file = new File();
+        file.setFileName("test.pdf");
+        file.setUploadedFileName("toto");
         event = new Event();
         event.setIdApplication("TEST");
         event.setExtensions(Arrays.asList("PDF", "JPEG"));
@@ -50,7 +50,7 @@ public class PdfValidOneFileTest {
     public void should_be_ok() {
         when(fileAdapter.readContentFile("toto")).thenReturn(Single.just(pdfBytes));
         when(fileAdapter.write(anyString(), any(byte[].class))).thenReturn(Single.just(true));
-        new ValidOneFile(uploadedFile)
+        new ValidOneFile(file)
                 .valid(event, fileAdapter)
                 .subscribe(testSubscriber);
         testSubscriber.assertValue(UploadState.valid);
@@ -59,10 +59,10 @@ public class PdfValidOneFileTest {
 
     @Test
     public void should_be_ko_if_content_multiple_extension() {
-        uploadedFile.setFileName("tyty.exe.pdf");
+        file.setFileName("tyty.exe.pdf");
         when(fileAdapter.readContentFile("toto")).thenReturn(Single.just(pdfBytes));
         when(fileAdapter.write(anyString(), any(byte[].class))).thenReturn(Single.just(true));
-        new ValidOneFile(uploadedFile)
+        new ValidOneFile(file)
                 .valid(event, fileAdapter)
                 .subscribe(testSubscriber);
         testSubscriber.assertValue(UploadState.multiple_extensions);
@@ -74,7 +74,7 @@ public class PdfValidOneFileTest {
     public void should_be_ko_if_another_type_content() {
         when(fileAdapter.readContentFile("toto")).thenReturn(Single.just(pngBytes));
         when(fileAdapter.write(anyString(), any(byte[].class))).thenReturn(Single.just(true));
-        new ValidOneFile(uploadedFile)
+        new ValidOneFile(file)
                 .valid(event, fileAdapter)
                 .subscribe(testSubscriber);
         testSubscriber.assertValue(UploadState.wrong_sanitization);
@@ -84,7 +84,7 @@ public class PdfValidOneFileTest {
     public void should_be_ko_if_no_content() {
         when(fileAdapter.readContentFile("toto")).thenReturn(Single.just(new byte[0]));
         when(fileAdapter.write(anyString(), any(byte[].class))).thenReturn(Single.just(true));
-        new ValidOneFile(uploadedFile)
+        new ValidOneFile(file)
                 .valid(event, fileAdapter)
                 .subscribe(testSubscriber);
         testSubscriber.assertValue(UploadState.wrong_sanitization);
@@ -94,7 +94,7 @@ public class PdfValidOneFileTest {
     public void should_be_ko_if_fail_to_read() {
         when(fileAdapter.readContentFile("toto")).thenReturn(Single.error(new IllegalStateException()));
         when(fileAdapter.write(anyString(), any(byte[].class))).thenReturn(Single.just(true));
-        new ValidOneFile(uploadedFile)
+        new ValidOneFile(file)
                 .valid(event, fileAdapter)
                 .subscribe(testSubscriber);
         testSubscriber.assertValue(UploadState.wrong_sanitization);

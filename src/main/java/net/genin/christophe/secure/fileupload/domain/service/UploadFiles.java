@@ -5,30 +5,30 @@ import io.reactivex.Single;
 import net.genin.christophe.secure.fileupload.domain.adapters.FileAdapter;
 import net.genin.christophe.secure.fileupload.domain.adapters.SaveUploadAdapter;
 import net.genin.christophe.secure.fileupload.domain.adapters.UploadEventAdapter;
-import net.genin.christophe.secure.fileupload.domain.entities.Upload;
+import net.genin.christophe.secure.fileupload.domain.entities.UploadEvent;
 import net.genin.christophe.secure.fileupload.domain.valueobject.UploadResponse;
 import net.genin.christophe.secure.fileupload.domain.valueobject.UploadState;
-import net.genin.christophe.secure.fileupload.domain.entities.UploadedFile;
+import net.genin.christophe.secure.fileupload.domain.entities.File;
 
 import java.util.HashMap;
 
 public class UploadFiles {
 
-    public final Upload upload;
+    public final UploadEvent uploadEvent;
 
-    public UploadFiles(Upload upload) {
-        this.upload = upload;
+    public UploadFiles(UploadEvent uploadEvent) {
+        this.uploadEvent = uploadEvent;
     }
 
-    public Single<UploadResponse> upload(UploadEventAdapter uploadEventAdapter, FileAdapter fileAdapter,
-                                         SaveUploadAdapter saveUploadAdapter) {
-        final String idApplication = upload.getIdApplication();
+    public Single<UploadResponse> run(UploadEventAdapter uploadEventAdapter, FileAdapter fileAdapter,
+                                      SaveUploadAdapter saveUploadAdapter) {
+        final String idApplication = uploadEvent.getIdApplication();
         return uploadEventAdapter.findByIdApplication(idApplication)
                 .flatMap(event -> {
-                    upload.setEvent(event);
+                    uploadEvent.setEvent(event);
                     // Suppress Event for not reusing
                     uploadEventAdapter.delete(event);
-                    return Observable.fromIterable(upload.getFiles())
+                    return Observable.fromIterable(uploadEvent.getFiles())
                             .flatMap(uf ->
                                     new ValidOneFile(uf)
                                             .valid(event, fileAdapter)
@@ -49,7 +49,7 @@ public class UploadFiles {
                                 acc.putAll(v);
                                 return acc;
                             })
-                            .doOnSuccess(m -> saveUploadAdapter.saveAndNotify(upload))
+                            .doOnSuccess(m -> saveUploadAdapter.saveAndNotify(uploadEvent))
                             .map(map -> {
                                 final UploadResponse uploadResponse = new UploadResponse();
                                 final Integer code = map.values().stream().max(Integer::compareTo).orElse(200);
@@ -60,7 +60,7 @@ public class UploadFiles {
                 })
                 // Suppress all files if no event found
                 .doOnError(t ->
-                        upload.getFiles().stream().map(UploadedFile::getUploadedFileName)
+                        uploadEvent.getFiles().stream().map(File::getUploadedFileName)
                                 .forEach(fileAdapter::delete)
                 )
                 // Message for no event found

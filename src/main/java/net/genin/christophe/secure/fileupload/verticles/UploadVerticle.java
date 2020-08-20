@@ -12,7 +12,7 @@ import net.genin.christophe.secure.fileupload.Utils;
 import net.genin.christophe.secure.fileupload.domain.service.UploadFiles;
 import net.genin.christophe.secure.fileupload.domain.entities.Event;
 import net.genin.christophe.secure.fileupload.domain.valueobject.EventState;
-import net.genin.christophe.secure.fileupload.domain.entities.Upload;
+import net.genin.christophe.secure.fileupload.domain.entities.UploadEvent;
 import net.genin.christophe.secure.fileupload.domain.adapters.FileAdapter;
 import net.genin.christophe.secure.fileupload.domain.adapters.SaveUploadAdapter;
 import net.genin.christophe.secure.fileupload.domain.adapters.UploadEventAdapter;
@@ -28,8 +28,8 @@ public class UploadVerticle extends AbstractVerticle implements UploadEventAdapt
         vertx.eventBus().<JsonObject>consumer(UPLOAD, msg ->
                 Single.just(msg)
                         .map(Message::body)
-                        .map(j -> j.mapTo(Upload.class))
-                        .flatMap(u -> new UploadFiles(u).upload(this, this, this))
+                        .map(j -> j.mapTo(UploadEvent.class))
+                        .flatMap(u -> new UploadFiles(u).run(this, this, this))
                         .subscribe(u -> {
                             final JsonObject entries = JsonObject.mapFrom(u);
                             msg.reply(entries);
@@ -72,9 +72,9 @@ public class UploadVerticle extends AbstractVerticle implements UploadEventAdapt
     }
 
     @Override
-    public void saveAndNotify(Upload upload) {
-        final JsonObject value = JsonObject.mapFrom(upload);
-        final String key = EventState.uploaded + ":" + upload.getIdApplication();
+    public void saveAndNotify(UploadEvent uploadEvent) {
+        final JsonObject value = JsonObject.mapFrom(uploadEvent);
+        final String key = EventState.uploaded + ":" + uploadEvent.getIdApplication();
         final JsonObject msg = new JsonObject().put("key", key).put("value", value);
         vertx.eventBus().rxRequest(DbVerticle.SAVE, msg)
                 .subscribe(

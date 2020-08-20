@@ -3,7 +3,7 @@ package net.genin.christophe.secure.fileupload.domain.entities;
 import java.util.Objects;
 
 @SuppressWarnings("unused")
-public class UploadedFile {
+public class File {
 
     private String name;
     private String uploadedFileName;
@@ -14,10 +14,10 @@ public class UploadedFile {
     private long size;
     private String errorCode;
 
-    public UploadedFile() {
+    public File() {
     }
 
-    public UploadedFile(String name, String uploadedFileName, String fileName, String contentType, String contentTransferEncoding, String charSet, long size) {
+    public File(String name, String uploadedFileName, String fileName, String contentType, String contentTransferEncoding, String charSet, long size) {
         this.name = name;
         this.uploadedFileName = uploadedFileName;
         this.fileName = fileName;
@@ -96,7 +96,7 @@ public class UploadedFile {
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
-        UploadedFile that = (UploadedFile) o;
+        File that = (File) o;
         return size == that.size &&
                 Objects.equals(name, that.name) &&
                 Objects.equals(uploadedFileName, that.uploadedFileName) &&

@@ -13,8 +13,8 @@ import io.vertx.reactivex.ext.web.handler.BodyHandler;
 import io.vertx.reactivex.ext.web.handler.CorsHandler;
 import io.vertx.reactivex.ext.web.handler.StaticHandler;
 import net.genin.christophe.secure.fileupload.Jsons;
-import net.genin.christophe.secure.fileupload.domain.entities.Upload;
-import net.genin.christophe.secure.fileupload.domain.entities.UploadedFile;
+import net.genin.christophe.secure.fileupload.domain.entities.UploadEvent;
+import net.genin.christophe.secure.fileupload.domain.entities.File;
 import net.genin.christophe.secure.fileupload.web.Api;
 import net.genin.christophe.secure.fileupload.web.Templates;
 
@@ -84,11 +84,11 @@ public class WebVerticle extends AbstractVerticle {
         router.post("/:id")
                 .handler(rc -> {
                     final String id = rc.pathParam("id");
-                    final List<UploadedFile> fileUploads = rc.fileUploads()
+                    final List<File> fileUploads = rc.fileUploads()
                             .stream()
-                            .map(f -> new UploadedFile(f.name(), f.uploadedFileName(), f.fileName(), f.contentType(), f.contentTransferEncoding(), f.contentTransferEncoding(), f.size()))
+                            .map(f -> new File(f.name(), f.uploadedFileName(), f.fileName(), f.contentType(), f.contentTransferEncoding(), f.contentTransferEncoding(), f.size()))
                             .collect(Collectors.toList());
-                    final JsonObject msg = JsonObject.mapFrom(new Upload(id, fileUploads));
+                    final JsonObject msg = JsonObject.mapFrom(new UploadEvent(id, fileUploads));
                     vertx.eventBus().<JsonObject>rxRequest(UploadVerticle.UPLOAD, msg)
 
                             .subscribe(m -> {

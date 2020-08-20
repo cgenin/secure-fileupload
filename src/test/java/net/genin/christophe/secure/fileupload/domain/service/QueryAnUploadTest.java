@@ -5,7 +5,6 @@ import io.reactivex.Single;
 import net.genin.christophe.secure.fileupload.domain.adapters.ConfigurationAdapter;
 import net.genin.christophe.secure.fileupload.domain.adapters.CreateEventAdapter;
 import net.genin.christophe.secure.fileupload.domain.entities.Event;
-import net.genin.christophe.secure.fileupload.domain.service.QueryUpload;
 import net.genin.christophe.secure.fileupload.domain.valueobject.EventState;
 import org.junit.Before;
 import org.junit.Test;
@@ -16,7 +15,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
-public class QueryUploadTest {
+public class QueryAnUploadTest {
 
     private Event event;
     private CreateEventAdapter createEventAdapter;
@@ -36,7 +35,7 @@ public class QueryUploadTest {
         when(configurationAdapter.extensionsIdApplication("TEST")).thenReturn(Collections.singletonList("PDF"));
         when(configurationAdapter.validateTimeByIdApplication("TEST")).thenReturn(60L);
         when(createEventAdapter.createDuring(event, 60L)).thenReturn(Single.just(true));
-        new QueryUpload(event).save(configurationAdapter, createEventAdapter)
+        new QueryAnUpload(event).save(configurationAdapter, createEventAdapter)
                 .subscribe(json -> {
                     assertThat(json.getString("id")).isNotEmpty().isNotBlank();
                     assertThat(event.getCreated()).isNotNull();
@@ -51,7 +50,7 @@ public class QueryUploadTest {
         when(configurationAdapter.extensionsIdApplication("TEST2")).thenReturn(Collections.singletonList("PDF"));
         when(configurationAdapter.validateTimeByIdApplication("TEST2")).thenReturn(60L);
         when(createEventAdapter.createDuring(event, 60L)).thenReturn(Single.just(true));
-        new QueryUpload(event).save(configurationAdapter, createEventAdapter)
+        new QueryAnUpload(event).save(configurationAdapter, createEventAdapter)
                 .subscribe(json -> {
                             assertThat(json).isNull();
                         },
@@ -65,7 +64,7 @@ public class QueryUploadTest {
         when(configurationAdapter.extensionsIdApplication("TEST")).thenReturn(Collections.singletonList("PDF"));
         when(configurationAdapter.validateTimeByIdApplication("TEST")).thenReturn(null);
         when(createEventAdapter.createDuring(event, 60L)).thenReturn(Single.just(true));
-        new QueryUpload(event).save(configurationAdapter, createEventAdapter)
+        new QueryAnUpload(event).save(configurationAdapter, createEventAdapter)
                 .subscribe(json -> {
                             assertThat(json).isNull();
                         },

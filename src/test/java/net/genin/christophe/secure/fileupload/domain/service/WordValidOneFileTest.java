@@ -5,7 +5,7 @@ import io.reactivex.observers.TestObserver;
 import io.reactivex.schedulers.Schedulers;
 import net.genin.christophe.secure.fileupload.domain.adapters.FileAdapter;
 import net.genin.christophe.secure.fileupload.domain.entities.Event;
-import net.genin.christophe.secure.fileupload.domain.entities.UploadedFile;
+import net.genin.christophe.secure.fileupload.domain.entities.File;
 import net.genin.christophe.secure.fileupload.domain.valueobject.UploadState;
 import org.junit.Before;
 import org.junit.Test;
@@ -23,7 +23,7 @@ import static org.mockito.Mockito.when;
 public class WordValidOneFileTest {
 
 
-    private UploadedFile uploadedFile;
+    private File file;
     private Event event;
     private FileAdapter fileAdapter;
     private byte[] wordBytes;
@@ -33,9 +33,9 @@ public class WordValidOneFileTest {
 
     @Before
     public void init() throws IOException {
-        uploadedFile = new UploadedFile();
-        uploadedFile.setFileName("test.docx");
-        uploadedFile.setUploadedFileName("toto");
+        file = new File();
+        file.setFileName("test.docx");
+        file.setUploadedFileName("toto");
         event = new Event();
         event.setIdApplication("TEST");
         event.setExtensions(Arrays.asList("WORD"));
@@ -51,7 +51,7 @@ public class WordValidOneFileTest {
     public void should_be_ok() throws InterruptedException {
         when(fileAdapter.readContentFile("toto")).thenReturn(Single.just(wordBytes));
         when(fileAdapter.write(anyString(), any(byte[].class))).thenReturn(Single.just(true));
-        new ValidOneFile(uploadedFile)
+        new ValidOneFile(file)
                 .valid(event, fileAdapter)
                 .subscribeOn(Schedulers.computation())
                 .subscribe(testSubscriber);
@@ -62,10 +62,10 @@ public class WordValidOneFileTest {
 
     @Test
     public void should_be_ko_if_content_multiple_extension() throws InterruptedException {
-        uploadedFile.setFileName("tyty.exe.docx");
+        file.setFileName("tyty.exe.docx");
         when(fileAdapter.readContentFile("toto")).thenReturn(Single.just(wordBytes));
         when(fileAdapter.write(anyString(), any(byte[].class))).thenReturn(Single.just(true));
-        new ValidOneFile(uploadedFile)
+        new ValidOneFile(file)
                 .valid(event, fileAdapter)
                 .subscribe(testSubscriber);
         testSubscriber.await();
@@ -78,7 +78,7 @@ public class WordValidOneFileTest {
     public void should_be_ko_if_another_type_content() throws InterruptedException {
         when(fileAdapter.readContentFile("toto")).thenReturn(Single.just(pngBytes));
         when(fileAdapter.write(anyString(), any(byte[].class))).thenReturn(Single.just(true));
-        new ValidOneFile(uploadedFile)
+        new ValidOneFile(file)
                 .valid(event, fileAdapter)
                 .subscribe(testSubscriber);
         testSubscriber.await();
@@ -89,7 +89,7 @@ public class WordValidOneFileTest {
     public void should_be_ko_if_no_content() throws InterruptedException {
         when(fileAdapter.readContentFile("toto")).thenReturn(Single.just(new byte[0]));
         when(fileAdapter.write(anyString(), any(byte[].class))).thenReturn(Single.just(true));
-        new ValidOneFile(uploadedFile)
+        new ValidOneFile(file)
                 .valid(event, fileAdapter)
                 .subscribe(testSubscriber);
         testSubscriber.await();
@@ -100,7 +100,7 @@ public class WordValidOneFileTest {
     public void should_be_ko_if_fail_to_read() throws InterruptedException {
         when(fileAdapter.readContentFile("toto")).thenReturn(Single.error(new IllegalStateException()));
         when(fileAdapter.write(anyString(), any(byte[].class))).thenReturn(Single.just(true));
-        new ValidOneFile(uploadedFile)
+        new ValidOneFile(file)
                 .valid(event, fileAdapter)
                 .subscribe(testSubscriber);
         testSubscriber.await();

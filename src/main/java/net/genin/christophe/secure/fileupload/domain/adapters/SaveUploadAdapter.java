@@ -1,8 +1,8 @@
 package net.genin.christophe.secure.fileupload.domain.adapters;
 
-import net.genin.christophe.secure.fileupload.domain.entities.Upload;
+import net.genin.christophe.secure.fileupload.domain.entities.UploadEvent;
 
 public interface SaveUploadAdapter {
 
-    void saveAndNotify(Upload upload);
+    void saveAndNotify(UploadEvent uploadEvent);
 }

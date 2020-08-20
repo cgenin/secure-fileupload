@@ -5,7 +5,7 @@ import io.reactivex.Single;
 import io.reactivex.functions.Function;
 import io.reactivex.schedulers.Schedulers;
 import net.genin.christophe.secure.fileupload.domain.adapters.FileAdapter;
-import net.genin.christophe.secure.fileupload.domain.entities.UploadedFile;
+import net.genin.christophe.secure.fileupload.domain.entities.File;
 
 import java.io.ByteArrayInputStream;
 import java.util.Arrays;
@@ -14,8 +14,8 @@ import java.util.Locale;
 import java.util.Objects;
 import java.util.regex.Pattern;
 
-public class WordSanitizer {
-    private final UploadedFile uploadedFile;
+class WordSanitizer {
+    private final File file;
 
     /**
      * List of allowed Word format (WML = Word ML (Word 2003 XML)).<br>
@@ -31,8 +31,8 @@ public class WordSanitizer {
 
     private static final Pattern REPLACE_DOTS = Pattern.compile("\\.");
 
-    public WordSanitizer(UploadedFile uploadedFile) {
-        this.uploadedFile = uploadedFile;
+    public WordSanitizer(File file) {
+        this.file = file;
     }
 
     private boolean isExtensionAuthorize(String ext) {
@@ -41,7 +41,7 @@ public class WordSanitizer {
     }
 
     public Single<Boolean> sanitize(FileAdapter fileAdapter) {
-        return fileAdapter.readContentFile(uploadedFile.getUploadedFileName())
+        return fileAdapter.readContentFile(file.getUploadedFileName())
                 .map(testFileFormat())
                 .map(testContent())
                 .subscribeOn(Schedulers.computation());
@@ -52,13 +52,13 @@ public class WordSanitizer {
         return b -> {
             final Document document = new Document(new ByteArrayInputStream(b));
             if (document.hasMacros()) {
-                throw new IllegalStateException("the document has Macro :" + uploadedFile);
+                throw new IllegalStateException("the document has Macro :" + file);
             }
             final NodeCollection<Shape> childNodes = document.getChildNodes(NodeType.SHAPE, true);
             for (int i = 0; i < childNodes.getCount(); i++) {
                 Shape shape = (Shape) childNodes.get(i);
                 if (Objects.nonNull(shape.getOleFormat())) {
-                    throw new IllegalStateException("The document has OLE Object " + uploadedFile);
+                    throw new IllegalStateException("The document has OLE Object " + file);
                 }
             }
 
@@ -71,7 +71,7 @@ public class WordSanitizer {
             FileFormatInfo formatInfo = FileFormatUtil.detectFileFormat(new ByteArrayInputStream(b));
             String formatExtension = FileFormatUtil.loadFormatToExtension(formatInfo.getLoadFormat());
             if (!isExtensionAuthorize(formatExtension)) {
-                throw new IllegalStateException("Extension not authorized " + formatExtension + "/" + uploadedFile);
+                throw new IllegalStateException("Extension not authorized " + formatExtension + "/" + file);
             }
 
             return b;

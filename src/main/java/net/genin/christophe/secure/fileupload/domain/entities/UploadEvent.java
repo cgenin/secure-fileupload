@@ -4,17 +4,17 @@ import java.util.Date;
 import java.util.List;
 
 @SuppressWarnings("unused")
-public class Upload {
+public class UploadEvent {
 
     private String idApplication;
-    private List<UploadedFile> files;
+    private List<File> files;
     private long created;
     private Event event;
 
-    public Upload() {
+    public UploadEvent() {
     }
 
-    public Upload(String idApplication, List<UploadedFile> files) {
+    public UploadEvent(String idApplication, List<File> files) {
         this.idApplication = idApplication;
         this.files = files;
         this.created = new Date().getTime();
@@ -26,7 +26,7 @@ public class Upload {
         this.idApplication = idApplication;
     }
 
-    public void setFiles(List<UploadedFile> files) {
+    public void setFiles(List<File> files) {
         this.files = files;
     }
 
@@ -42,7 +42,7 @@ public class Upload {
         return idApplication;
     }
 
-    public List<UploadedFile> getFiles() {
+    public List<File> getFiles() {
         return files;
     }
 

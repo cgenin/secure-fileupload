@@ -12,11 +12,11 @@ import java.util.*;
 /**
  * Use Case register an query of uploading
  */
-public class QueryUpload {
+public class QueryAnUpload {
 
     public final Event event;
 
-    public QueryUpload(Event event) {
+    public QueryAnUpload(Event event) {
         this.event = event;
     }
 

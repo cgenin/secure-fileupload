@@ -3,7 +3,7 @@ package net.genin.christophe.secure.fileupload.domain.service;
 import io.reactivex.Observable;
 import io.reactivex.Single;
 import net.genin.christophe.secure.fileupload.domain.valueobject.Extensions;
-import net.genin.christophe.secure.fileupload.domain.entities.UploadedFile;
+import net.genin.christophe.secure.fileupload.domain.entities.File;
 import net.genin.christophe.secure.fileupload.domain.adapters.FileAdapter;
 import net.sf.jmimemagic.Magic;
 import org.slf4j.Logger;
@@ -16,16 +16,16 @@ import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.util.Objects;
 
-public class ImageSanitizer {
+class ImageSanitizer {
     private static final Logger LOG = LoggerFactory.getLogger(ImageSanitizer.class);
-    private final UploadedFile uploadedFile;
+    private final File file;
 
-    public ImageSanitizer(UploadedFile uploadedFile) {
-        this.uploadedFile = uploadedFile;
+    public ImageSanitizer(File file) {
+        this.file = file;
     }
 
     public Single<Boolean> sanitize(Extensions extensions, FileAdapter fileAdapter) {
-        return fileAdapter.readContentFile(uploadedFile.getUploadedFileName())
+        return fileAdapter.readContentFile(file.getUploadedFileName())
                 .flatMap(data -> Observable.concat(
                         mimetypes(extensions, data).toObservable(),
                         resize(data, fileAdapter).toObservable()
@@ -37,7 +37,7 @@ public class ImageSanitizer {
                 .map(d -> {
                     final BufferedImage originalImage = ImageIO.read(new ByteArrayInputStream(d));
                     if (Objects.isNull(originalImage)) {
-                        throw new IllegalStateException("Cannot read image " + uploadedFile);
+                        throw new IllegalStateException("Cannot read image " + file);
                     }
                     int originalWidth = originalImage.getWidth(null);
                     int originalHeight = originalImage.getHeight(null);
@@ -55,7 +55,7 @@ public class ImageSanitizer {
                     ImageIO.write(sanitizedImage, "JPG", byteArrayOutputStream);
                     return byteArrayOutputStream;
                 })
-                .flatMap(ba -> fileAdapter.write(uploadedFile.getUploadedFileName(), ba.toByteArray()));
+                .flatMap(ba -> fileAdapter.write(file.getUploadedFileName(), ba.toByteArray()));
     }
 
     public Single<Boolean> mimetypes(Extensions extensions, byte[] data) {
@@ -69,7 +69,7 @@ public class ImageSanitizer {
                             .stream()
                             .anyMatch(s -> magicMatch.getMimeType().equals(s));
                     if (!isGoodMimeType) {
-                        throw new IllegalStateException("Wrong mime types " + magicMatch.getMimeType() + "/" + extensions.getMimetype() + " for " + uploadedFile);
+                        throw new IllegalStateException("Wrong mime types " + magicMatch.getMimeType() + "/" + extensions.getMimetype() + " for " + file);
                     }
                     return true;
                 });
