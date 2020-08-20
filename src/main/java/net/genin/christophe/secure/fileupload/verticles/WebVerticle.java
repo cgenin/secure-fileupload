@@ -13,8 +13,8 @@ import io.vertx.reactivex.ext.web.handler.BodyHandler;
 import io.vertx.reactivex.ext.web.handler.CorsHandler;
 import io.vertx.reactivex.ext.web.handler.StaticHandler;
 import net.genin.christophe.secure.fileupload.Jsons;
-import net.genin.christophe.secure.fileupload.models.entities.Upload;
-import net.genin.christophe.secure.fileupload.models.entities.UploadedFile;
+import net.genin.christophe.secure.fileupload.domain.entities.Upload;
+import net.genin.christophe.secure.fileupload.domain.entities.UploadedFile;
 import net.genin.christophe.secure.fileupload.web.Api;
 import net.genin.christophe.secure.fileupload.web.Templates;
 

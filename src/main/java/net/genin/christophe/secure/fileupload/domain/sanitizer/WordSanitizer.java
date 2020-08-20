@@ -1,11 +1,11 @@
-package net.genin.christophe.secure.fileupload.models.sanitizer;
+package net.genin.christophe.secure.fileupload.domain.sanitizer;
 
 import com.aspose.words.*;
 import io.reactivex.Single;
 import io.reactivex.functions.Function;
 import io.reactivex.schedulers.Schedulers;
-import net.genin.christophe.secure.fileupload.models.entities.UploadedFile;
-import net.genin.christophe.secure.fileupload.models.adapters.FileAdapter;
+import net.genin.christophe.secure.fileupload.domain.entities.UploadedFile;
+import net.genin.christophe.secure.fileupload.domain.adapters.FileAdapter;
 
 import java.io.ByteArrayInputStream;
 import java.util.Arrays;

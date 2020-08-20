@@ -1,4 +1,4 @@
-package net.genin.christophe.secure.fileupload.models.entities;
+package net.genin.christophe.secure.fileupload.domain.entities;
 
 public enum UploadState {
     valid(200),

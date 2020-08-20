@@ -1,13 +1,6 @@
-package net.genin.christophe.secure.fileupload.models.entities;
-
-import io.reactivex.Observable;
-import io.reactivex.Single;
-import net.genin.christophe.secure.fileupload.models.adapters.FileAdapter;
-import net.genin.christophe.secure.fileupload.models.adapters.SaveUploadAdapter;
-import net.genin.christophe.secure.fileupload.models.adapters.UploadEventAdapter;
+package net.genin.christophe.secure.fileupload.domain.entities;
 
 import java.util.Date;
-import java.util.HashMap;
 import java.util.List;
 
 @SuppressWarnings("unused")

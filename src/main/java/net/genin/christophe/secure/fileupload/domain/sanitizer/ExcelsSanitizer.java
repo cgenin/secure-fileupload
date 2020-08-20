@@ -1,4 +1,4 @@
-package net.genin.christophe.secure.fileupload.models.sanitizer;
+package net.genin.christophe.secure.fileupload.domain.sanitizer;
 
 import com.aspose.cells.*;
 import io.reactivex.Observable;
@@ -6,8 +6,8 @@ import io.reactivex.Single;
 import io.reactivex.SingleSource;
 import io.reactivex.functions.Function;
 import io.reactivex.schedulers.Schedulers;
-import net.genin.christophe.secure.fileupload.models.entities.UploadedFile;
-import net.genin.christophe.secure.fileupload.models.adapters.FileAdapter;
+import net.genin.christophe.secure.fileupload.domain.entities.UploadedFile;
+import net.genin.christophe.secure.fileupload.domain.adapters.FileAdapter;
 
 import java.io.ByteArrayInputStream;
 import java.util.Arrays;

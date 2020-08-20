@@ -1,19 +1,6 @@
-package net.genin.christophe.secure.fileupload.models.entities;
-
-import io.reactivex.Single;
-import io.reactivex.SingleSource;
-import io.reactivex.functions.Function;
-import net.genin.christophe.secure.fileupload.models.adapters.FileAdapter;
-import net.genin.christophe.secure.fileupload.models.sanitizer.ExcelsSanitizer;
-import net.genin.christophe.secure.fileupload.models.sanitizer.ImageSanitizer;
-import net.genin.christophe.secure.fileupload.models.sanitizer.PdfSanitizer;
-import net.genin.christophe.secure.fileupload.models.sanitizer.WordSanitizer;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+package net.genin.christophe.secure.fileupload.domain.entities;
 
 import java.util.Objects;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
 @SuppressWarnings("unused")
 public class UploadedFile {

@@ -1,17 +1,17 @@
-package net.genin.christophe.secure.fileupload.models;
+package net.genin.christophe.secure.fileupload.domain;
 
 import io.reactivex.Single;
 import io.reactivex.SingleSource;
 import io.reactivex.functions.Function;
-import net.genin.christophe.secure.fileupload.models.adapters.FileAdapter;
-import net.genin.christophe.secure.fileupload.models.entities.Event;
-import net.genin.christophe.secure.fileupload.models.entities.Extensions;
-import net.genin.christophe.secure.fileupload.models.entities.UploadState;
-import net.genin.christophe.secure.fileupload.models.entities.UploadedFile;
-import net.genin.christophe.secure.fileupload.models.sanitizer.ExcelsSanitizer;
-import net.genin.christophe.secure.fileupload.models.sanitizer.ImageSanitizer;
-import net.genin.christophe.secure.fileupload.models.sanitizer.PdfSanitizer;
-import net.genin.christophe.secure.fileupload.models.sanitizer.WordSanitizer;
+import net.genin.christophe.secure.fileupload.domain.adapters.FileAdapter;
+import net.genin.christophe.secure.fileupload.domain.entities.Event;
+import net.genin.christophe.secure.fileupload.domain.entities.Extensions;
+import net.genin.christophe.secure.fileupload.domain.entities.UploadState;
+import net.genin.christophe.secure.fileupload.domain.entities.UploadedFile;
+import net.genin.christophe.secure.fileupload.domain.sanitizer.ExcelsSanitizer;
+import net.genin.christophe.secure.fileupload.domain.sanitizer.ImageSanitizer;
+import net.genin.christophe.secure.fileupload.domain.sanitizer.PdfSanitizer;
+import net.genin.christophe.secure.fileupload.domain.sanitizer.WordSanitizer;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

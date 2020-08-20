@@ -1,11 +1,11 @@
-package net.genin.christophe.secure.fileupload.models.sanitizer;
+package net.genin.christophe.secure.fileupload.domain.sanitizer;
 
 import com.itextpdf.text.pdf.PdfArray;
 import com.itextpdf.text.pdf.PdfName;
 import com.itextpdf.text.pdf.PdfReader;
 import io.reactivex.Single;
-import net.genin.christophe.secure.fileupload.models.entities.UploadedFile;
-import net.genin.christophe.secure.fileupload.models.adapters.FileAdapter;
+import net.genin.christophe.secure.fileupload.domain.entities.UploadedFile;
+import net.genin.christophe.secure.fileupload.domain.adapters.FileAdapter;
 
 import java.util.Objects;
 import java.util.Optional;

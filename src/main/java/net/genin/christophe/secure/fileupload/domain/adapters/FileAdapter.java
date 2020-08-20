@@ -1,4 +1,4 @@
-package net.genin.christophe.secure.fileupload.models.adapters;
+package net.genin.christophe.secure.fileupload.domain.adapters;
 
 import io.reactivex.Single;
 

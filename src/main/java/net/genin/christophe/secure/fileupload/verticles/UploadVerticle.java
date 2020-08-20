@@ -9,13 +9,13 @@ import io.vertx.reactivex.core.AbstractVerticle;
 import io.vertx.reactivex.core.buffer.Buffer;
 import io.vertx.reactivex.core.eventbus.Message;
 import net.genin.christophe.secure.fileupload.Utils;
-import net.genin.christophe.secure.fileupload.models.UploadFiles;
-import net.genin.christophe.secure.fileupload.models.entities.Event;
-import net.genin.christophe.secure.fileupload.models.entities.EventState;
-import net.genin.christophe.secure.fileupload.models.entities.Upload;
-import net.genin.christophe.secure.fileupload.models.adapters.FileAdapter;
-import net.genin.christophe.secure.fileupload.models.adapters.SaveUploadAdapter;
-import net.genin.christophe.secure.fileupload.models.adapters.UploadEventAdapter;
+import net.genin.christophe.secure.fileupload.domain.UploadFiles;
+import net.genin.christophe.secure.fileupload.domain.entities.Event;
+import net.genin.christophe.secure.fileupload.domain.entities.EventState;
+import net.genin.christophe.secure.fileupload.domain.entities.Upload;
+import net.genin.christophe.secure.fileupload.domain.adapters.FileAdapter;
+import net.genin.christophe.secure.fileupload.domain.adapters.SaveUploadAdapter;
+import net.genin.christophe.secure.fileupload.domain.adapters.UploadEventAdapter;
 
 public class UploadVerticle extends AbstractVerticle implements UploadEventAdapter, FileAdapter, SaveUploadAdapter {
 

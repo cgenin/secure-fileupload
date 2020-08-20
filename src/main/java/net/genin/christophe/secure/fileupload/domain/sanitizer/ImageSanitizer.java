@@ -1,10 +1,10 @@
-package net.genin.christophe.secure.fileupload.models.sanitizer;
+package net.genin.christophe.secure.fileupload.domain.sanitizer;
 
 import io.reactivex.Observable;
 import io.reactivex.Single;
-import net.genin.christophe.secure.fileupload.models.entities.Extensions;
-import net.genin.christophe.secure.fileupload.models.entities.UploadedFile;
-import net.genin.christophe.secure.fileupload.models.adapters.FileAdapter;
+import net.genin.christophe.secure.fileupload.domain.entities.Extensions;
+import net.genin.christophe.secure.fileupload.domain.entities.UploadedFile;
+import net.genin.christophe.secure.fileupload.domain.adapters.FileAdapter;
 import net.sf.jmimemagic.Magic;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

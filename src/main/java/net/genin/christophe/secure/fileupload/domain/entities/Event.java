@@ -1,9 +1,4 @@
-package net.genin.christophe.secure.fileupload.models.entities;
-
-import io.reactivex.Single;
-import io.vertx.core.json.JsonObject;
-import net.genin.christophe.secure.fileupload.models.adapters.ConfigurationAdapter;
-import net.genin.christophe.secure.fileupload.models.adapters.CreateEventAdapter;
+package net.genin.christophe.secure.fileupload.domain.entities;
 
 import java.util.*;
 

@@ -46,11 +46,12 @@ export const JPG = new Extension('JPG', ['JPG', 'JPEG'], ['image/jpg']);
 export const PNG = new Extension('PNG', ['PNG'], ['image/png']);
 export const WORD = new Extension('WORD', ['DOC', 'DOCX'], ['application/msword',
     'application/vnd.openxmlformats-officedocument.wordprocessingml.document']);
+export const EXCEL = new Extension('EXCEL', ['XLS', 'XLSX', 'XLSM', 'XLSB', 'XLT', 'XLTM'],
+    ['application/vnd.ms-excel', 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet']);
 
-export const ALL_EXTENSIONS = [PDF, PNG, JPG];
+export const ALL_EXTENSIONS = [PDF, PNG, JPG, WORD, EXCEL];
 
 export function convert2Extensions(names) {
-    console.log(names)
     return (names || [])
         .map(n => {
             return ALL_EXTENSIONS.find(e => e.parse(n));
