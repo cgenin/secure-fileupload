@@ -1,11 +1,11 @@
-package net.genin.christophe.secure.fileupload.domain.sanitizer;
+package net.genin.christophe.secure.fileupload.domain.service;
 
 import com.aspose.words.*;
 import io.reactivex.Single;
 import io.reactivex.functions.Function;
 import io.reactivex.schedulers.Schedulers;
-import net.genin.christophe.secure.fileupload.domain.entities.UploadedFile;
 import net.genin.christophe.secure.fileupload.domain.adapters.FileAdapter;
+import net.genin.christophe.secure.fileupload.domain.entities.UploadedFile;
 
 import java.io.ByteArrayInputStream;
 import java.util.Arrays;
@@ -44,7 +44,7 @@ public class WordSanitizer {
         return fileAdapter.readContentFile(uploadedFile.getUploadedFileName())
                 .map(testFileFormat())
                 .map(testContent())
-                .subscribeOn(Schedulers.io());
+                .subscribeOn(Schedulers.computation());
     }
 
     @SuppressWarnings("unchecked")
@@ -73,6 +73,7 @@ public class WordSanitizer {
             if (!isExtensionAuthorize(formatExtension)) {
                 throw new IllegalStateException("Extension not authorized " + formatExtension + "/" + uploadedFile);
             }
+
             return b;
         };
     }

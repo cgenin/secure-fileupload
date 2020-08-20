@@ -1,17 +1,13 @@
-package net.genin.christophe.secure.fileupload.domain;
+package net.genin.christophe.secure.fileupload.domain.service;
 
 import io.reactivex.Single;
 import io.reactivex.SingleSource;
 import io.reactivex.functions.Function;
 import net.genin.christophe.secure.fileupload.domain.adapters.FileAdapter;
 import net.genin.christophe.secure.fileupload.domain.entities.Event;
-import net.genin.christophe.secure.fileupload.domain.entities.Extensions;
-import net.genin.christophe.secure.fileupload.domain.entities.UploadState;
+import net.genin.christophe.secure.fileupload.domain.valueobject.Extensions;
+import net.genin.christophe.secure.fileupload.domain.valueobject.UploadState;
 import net.genin.christophe.secure.fileupload.domain.entities.UploadedFile;
-import net.genin.christophe.secure.fileupload.domain.sanitizer.ExcelsSanitizer;
-import net.genin.christophe.secure.fileupload.domain.sanitizer.ImageSanitizer;
-import net.genin.christophe.secure.fileupload.domain.sanitizer.PdfSanitizer;
-import net.genin.christophe.secure.fileupload.domain.sanitizer.WordSanitizer;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

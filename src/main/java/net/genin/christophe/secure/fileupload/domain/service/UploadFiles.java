@@ -1,4 +1,4 @@
-package net.genin.christophe.secure.fileupload.domain;
+package net.genin.christophe.secure.fileupload.domain.service;
 
 import io.reactivex.Observable;
 import io.reactivex.Single;
@@ -6,8 +6,8 @@ import net.genin.christophe.secure.fileupload.domain.adapters.FileAdapter;
 import net.genin.christophe.secure.fileupload.domain.adapters.SaveUploadAdapter;
 import net.genin.christophe.secure.fileupload.domain.adapters.UploadEventAdapter;
 import net.genin.christophe.secure.fileupload.domain.entities.Upload;
-import net.genin.christophe.secure.fileupload.domain.entities.UploadResponse;
-import net.genin.christophe.secure.fileupload.domain.entities.UploadState;
+import net.genin.christophe.secure.fileupload.domain.valueobject.UploadResponse;
+import net.genin.christophe.secure.fileupload.domain.valueobject.UploadState;
 import net.genin.christophe.secure.fileupload.domain.entities.UploadedFile;
 
 import java.util.HashMap;

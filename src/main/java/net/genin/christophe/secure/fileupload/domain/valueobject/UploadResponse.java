@@ -1,4 +1,4 @@
-package net.genin.christophe.secure.fileupload.domain.entities;
+package net.genin.christophe.secure.fileupload.domain.valueobject;
 
 import java.util.Map;
 

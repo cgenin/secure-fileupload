@@ -1,4 +1,4 @@
-package net.genin.christophe.secure.fileupload.domain.sanitizer;
+package net.genin.christophe.secure.fileupload.domain.service;
 
 import com.aspose.cells.*;
 import io.reactivex.Observable;
@@ -36,7 +36,7 @@ public class ExcelsSanitizer {
                 .map(testFileFormat())
                 .map(b -> new Workbook(new ByteArrayInputStream(b)))
                 .flatMap(testContent())
-                .subscribeOn(Schedulers.io());
+                .subscribeOn(Schedulers.computation());
     }
 
     @SuppressWarnings("unchecked")

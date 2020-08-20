@@ -1,4 +1,4 @@
-package net.genin.christophe.secure.fileupload.domain.sanitizer;
+package net.genin.christophe.secure.fileupload.domain.service;
 
 import com.itextpdf.text.pdf.PdfArray;
 import com.itextpdf.text.pdf.PdfName;
@@ -24,7 +24,7 @@ public class PdfSanitizer {
                     // Check 1:
                     // Detect if the document contains any JavaScript code
                     String jsCode = reader.getJavaScript();
-                    if (Objects.isNull(jsCode))
+                    if (Objects.nonNull(jsCode))
                         throw new IllegalStateException("The file " + uploadedFile + " has embedded javascript");
                     return reader;
                 })

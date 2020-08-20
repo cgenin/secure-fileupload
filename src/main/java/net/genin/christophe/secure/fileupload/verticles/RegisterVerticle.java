@@ -8,7 +8,7 @@ import io.vertx.reactivex.core.AbstractVerticle;
 import io.vertx.reactivex.core.eventbus.Message;
 import net.genin.christophe.secure.fileupload.Jsons;
 import net.genin.christophe.secure.fileupload.Utils;
-import net.genin.christophe.secure.fileupload.domain.QueryUpload;
+import net.genin.christophe.secure.fileupload.domain.service.QueryUpload;
 import net.genin.christophe.secure.fileupload.domain.adapters.ConfigurationAdapter;
 import net.genin.christophe.secure.fileupload.domain.adapters.CreateEventAdapter;
 import net.genin.christophe.secure.fileupload.domain.entities.Event;

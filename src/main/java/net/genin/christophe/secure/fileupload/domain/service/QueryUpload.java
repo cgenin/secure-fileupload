@@ -1,11 +1,11 @@
-package net.genin.christophe.secure.fileupload.domain;
+package net.genin.christophe.secure.fileupload.domain.service;
 
 import io.reactivex.Single;
 import io.vertx.core.json.JsonObject;
 import net.genin.christophe.secure.fileupload.domain.adapters.ConfigurationAdapter;
 import net.genin.christophe.secure.fileupload.domain.adapters.CreateEventAdapter;
 import net.genin.christophe.secure.fileupload.domain.entities.Event;
-import net.genin.christophe.secure.fileupload.domain.entities.EventState;
+import net.genin.christophe.secure.fileupload.domain.valueobject.EventState;
 
 import java.util.*;
 

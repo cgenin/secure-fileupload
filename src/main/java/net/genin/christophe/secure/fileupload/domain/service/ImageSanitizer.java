@@ -1,8 +1,8 @@
-package net.genin.christophe.secure.fileupload.domain.sanitizer;
+package net.genin.christophe.secure.fileupload.domain.service;
 
 import io.reactivex.Observable;
 import io.reactivex.Single;
-import net.genin.christophe.secure.fileupload.domain.entities.Extensions;
+import net.genin.christophe.secure.fileupload.domain.valueobject.Extensions;
 import net.genin.christophe.secure.fileupload.domain.entities.UploadedFile;
 import net.genin.christophe.secure.fileupload.domain.adapters.FileAdapter;
 import net.sf.jmimemagic.Magic;
