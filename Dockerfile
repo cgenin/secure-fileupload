@@ -15,6 +15,7 @@ RUN gradle build --no-daemon
 
 FROM java:8-jdk-alpine
 WORKDIR /usr/app
+RUN mkdir /upload
 COPY --from=build /usr/fileupload/build/libs/secure-fileupload-*fat.jar .
 ENTRYPOINT ["java", "-jar", "/usr/app/secure-fileupload-1.0.0-SNAPSHOT-fat.jar"]
 

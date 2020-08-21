@@ -18,7 +18,8 @@ repositories {
 
 }
 
-sourceCompatibility = '1.8'
+sourceCompatibility = 1.8
+targetCompatibility = 1.8
 
 def vertxVersion = '3.9.2'
 def tikaversion = '1.24.1'
