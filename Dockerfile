@@ -1,7 +1,12 @@
-FROM node:10.22.0 AS buildfront
+FROM node:10.22.0-alpine3.9 AS buildfront
 WORKDIR /usr/fileupload/wc
 COPY wc .
-RUN npm install
+# use changes to package.json to force Docker not to use the cache
+# when we change our application's nodejs dependencies:
+COPY wc/package.json /tmp/package.json
+RUN cd /tmp && npm install
+RUN mkdir -p /usr/fileupload/wc && cp -a /tmp/node_modules /usr/fileupload/wc/
+RUN cd /usr/fileupload/wc
 RUN npm run build-wc
 
 FROM gradle:6.6-jdk8 AS build
